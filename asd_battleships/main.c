@@ -15,10 +15,11 @@ typedef int bool;
 #define VERTICAL_SIZE 10
 
 #define false 0
-#define true 1
+#define true 1 // TODO add to a header file
 
 int stoi(char* s) { return s[0] - 'A'; }
 
+//TODO cqlostno formatirane na koda: NULL, !=, {} i tn
 bool isValidPlacement(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE],
     int x, int y, int size, char direction) {
     if (direction == 'H') {
@@ -108,7 +109,7 @@ int main(void) {
     FILE* file;
     file = fopen("ships.conf", "r");
     if (file == NULL) {
-        printf("Failed to open the file.\n");
+        printf("Failed to open file.\n");
         return ERROR_OPEN_FILE;
     }
 
