@@ -4,18 +4,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "battleships.h"
+
 typedef int bool;
-
-#define SUCCESS 0
-#define ERROR_OPEN_FILE 1
-#define ERROR_RUNTIME 2
-#define ERROR_INVALID_CELL 3
-
-#define HORIZONTAL_SIZE 10
-#define VERTICAL_SIZE 10
-
-#define false 0
-#define true 1 // TODO add to a header file
 
 int stoi(char* s) { return s[0] - 'A'; }
 

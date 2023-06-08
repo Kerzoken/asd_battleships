@@ -2,11 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct encrypted_message
-{
-    char* text;
-    int size;
-};
+#include "battleships.h"
 
 struct encrypted_message* encrypt(char* text, char* iv, char* key)
 {

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define ERROR_OPEN_FILE // TODO add to a header file
+#include "battleships.h"
 
 int add_replay()
 {
