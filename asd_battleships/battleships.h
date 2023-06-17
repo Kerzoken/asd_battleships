@@ -11,6 +11,8 @@
 #define false 0
 #define true 1
 
+#define INITIAL_VECTOR "EYXoOfAaEgiTFOeaXEniD5nj83QtiKtt"
+
 struct encrypted_message
 {
     char* text;

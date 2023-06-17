@@ -8,6 +8,7 @@ typedef int bool;
 
 #include "battleships.h"
 
+/*
 void singleplayer()
 {
 	char playerBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE];
@@ -43,3 +44,4 @@ void singleplayer()
         printf("You lose!\n");
     }
 }
+*/
