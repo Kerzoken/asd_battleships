@@ -13,6 +13,17 @@
 
 #define INITIAL_VECTOR "EYXoOfAaEgiTFOeaXEniD5nj83QtiKtt"
 
+#define DIRECTION_LEFT 'L'
+#define DIRECTION_RIGHT 'R'
+#define DIRECTION_UP 'U'
+#define DIRECTION_DOWN 'D'
+
+#define EMPTY_SPACE '_'
+#define SHIP_SPACE 'S'
+#define HIT_SHIP_SPACE 'H'
+#define HIT_EMPTY_SPACE 'O'
+
+
 struct encrypted_message
 {
     char* text;
