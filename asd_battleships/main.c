@@ -11,6 +11,9 @@ char ERROR_MSG[256];
 
 int stoi(char* s) { return s[0] - 'A'; }
 
+int add_to_replay(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], char* password);
+int read_replay(char* password);
+
 // TODO add macros in 9
 bool isValidPlacement(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE],
     int x, int y, int size, char direction) {
@@ -349,11 +352,12 @@ int main(void) {
         printf("\t1) Add ship\n");
         printf("\t2) Edit position\n");
         printf("\t3) Print board\n");
-        printf("\t4) Finish configuration for player 1\n");
+        printf("\t4) Print replay\n");
+        printf("\t5) Finish configuration for player 1\n");
 
         scanf("%d", &cmd);
 
-        if (cmd == 4)
+        if (cmd == 5)
             if (battleships1[0] == BATTLESHIP_2_COUNT && battleships1[1] == BATTLESHIP_3_COUNT && battleships1[2] == BATTLESHIP_4_COUNT && battleships1[3] == BATTLESHIP_6_COUNT)
                 break;
             else {
@@ -406,6 +410,13 @@ int main(void) {
             printBattlefield(battlefield1);
             break;
         }
+        case 4: {
+            printf("Enter password: ");
+            char password[64];
+            scanf("%s", password);
+            read_replay(password);
+            break;
+        }
         }
 
     } while (cmd != 4);
@@ -455,12 +466,11 @@ int main(void) {
             printf("\t1) Add ship\n");
             printf("\t2) Edit position\n");
             printf("\t3) Print board\n");
-            printf("\t4) Print replay\n");
-            printf("\t5) Finish configuration for player 2\n");
+            printf("\t4) Finish configuration for player 2\n");
 
             scanf("%d", &cmd);
 
-            if (cmd == 5)
+            if (cmd == 4)
                 if (battleships2[0] == BATTLESHIP_2_COUNT && battleships2[1] == BATTLESHIP_3_COUNT && battleships2[2] == BATTLESHIP_4_COUNT && battleships2[3] == BATTLESHIP_6_COUNT)
                     break;
                 else {
@@ -513,13 +523,7 @@ int main(void) {
                 printBattlefield(battlefield2);
                 break;
             }
-            case 4: {
-				printf("Enter password: ");
-				char password[64];
-				scanf("%s", password);
-                read_replay(password);
-                break;
-            }
+
             }
         } while (1);
     }
@@ -554,7 +558,7 @@ int main(void) {
                 printBattlefield(other_battlefield1);
             }
             else if (a == 2) {
-                char input[2];
+                char input[32];
                 printf("\nEnter coordinates to fire: ");
                 scanf("%s", input);
 
@@ -636,7 +640,7 @@ int main(void) {
                     printBattlefield(other_battlefield2);
                 }
                 else if (a == 2) {
-                    char input[2];
+                    char input[32];
                     printf("\nEnter coordinates to fire: ");
                     scanf("%s", input);
 
@@ -675,9 +679,9 @@ int main(void) {
                         if (battlefield1[row][col] == EMPTY_SPACE)
                             battlefield1[row][col] = HIT_SHIP_SPACE;
                     }
-					
-                    memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE* VERTICAL_SIZE);
-					field_count++;
+
+                    memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
+                    field_count++;
 
                     break;
                 }
@@ -693,11 +697,11 @@ int main(void) {
                 break;
         }
     }
-	
+
     printf("Do you want to save the game in a replay?\n");
     printf("1. Yes\n");
     printf("2. No\n");
-    
+
     do {
         scanf("%d", &n);
     } while (n != 1 && n != 2);
@@ -713,6 +717,8 @@ int main(void) {
         for (int i = 0; i < field_count; i++) {
             add_to_replay(fields[i], password);
         }
+
+        printf("Replay saved!\n");
     }
 
     return SUCCESS;
