@@ -90,6 +90,7 @@ void singleplayer()
 
         // update player battlefield
     }
+	//test
 
     if (isGameOver(playerBattlefield)) {
         printf("You win!\n");
