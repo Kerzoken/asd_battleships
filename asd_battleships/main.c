@@ -146,6 +146,59 @@ int fillBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battl
     return SUCCESS;
 }
 
+void deleteShip(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships, char* ship) {
+    char* temp = strdup(ship);
+    int col = stoi(strtok(temp, "-"));
+    int row = atoi(strtok(NULL, "-")) - 1;
+    int size = atoi(strtok(NULL, "-"));
+    char* direction = strtok(NULL, "-");
+
+    if (col < 0 || row < 0) {
+        fprintf(stderr, "Invalid position.\n");
+        return;
+    }
+
+    if (*direction == 'H') {
+        if (col + size > 10) {
+            strcpy(ERROR_MSG, "Invalid position.");
+            return;
+        }
+        for (int i = col; i < col + size; i++) {
+            battlefield[row][i] = 'O';
+        }
+    }
+    else if (*direction == 'V') {
+        if (row + size > 10) {
+            strcpy(ERROR_MSG, "Invalid position.");
+            return;
+        }
+        for (int i = row; i < row + size; i++) {
+            battlefield[i][col] = 'O';
+        }
+    }
+    else {
+        strcpy(ERROR_MSG, "Invalid direction.");
+        return;
+    }
+
+    int i = 0;
+    if (size == 2) {
+        i = 0;
+    }
+    else if (size == 3) {
+        i = 1;
+    }
+    else if (size == 4) {
+        i = 2;
+    }
+    else if (size == 6) {
+        i = 3;
+    }
+
+    battleships[i]--;
+    free(temp);
+}
+
 void printBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE]) {
     for (int i = 0; i < VERTICAL_SIZE; i++) {
         for (int j = 0; j < HORIZONTAL_SIZE; j++) {
@@ -220,6 +273,26 @@ int main(void) {
             break;
         }
         case 2: {
+            printf("Enter ship to edit in this format: COL-ROW-SIZE-DIRECTION\n");
+
+            char line[32];
+            scanf("%s", line);
+
+            deleteShip(battlefield, battleships, line);
+
+            printf("Enter new ship in this format: COL-ROW-SIZE-DIRECTION\n");
+
+            scanf("%s", line);
+
+            if (isShipAvailable(battleships, line)) {
+                if (fillBattlefield(battlefield, battleships, line) != SUCCESS) {
+                    printf("%s\n", ERROR_MSG);
+                }
+            }
+            else {
+                printf("%s\n", ERROR_MSG);
+            }
+
             break;
         }
         case 3: {
