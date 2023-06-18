@@ -146,6 +146,29 @@ int fillBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battl
     return SUCCESS;
 }
 
+void add_ships_from_file(int* battleships, char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE])
+{
+    char filename[128];
+
+    printf("Enter filename: ");
+    scanf("%s", filename);
+
+    FILE* file;
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Failed to open the file.\n");
+        return ERROR_OPEN_FILE;
+    }
+
+    char line[32];
+    while (fgets(line, 32, file) != NULL) {
+        fillBattlefield(battlefield, battleships, line);
+    }
+
+    printBattlefield(battlefield);
+    fclose(file);
+}
+
 void deleteShip(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships, char* ship) {
     char* temp = strdup(ship);
     int col = stoi(strtok(temp, "-"));
@@ -223,25 +246,7 @@ int main(void) {
     } while (n != 1 && n != 2);
 
     if (n == 1) {
-        char filename[128];
-
-        printf("Enter filename: ");
-        scanf("%s", filename);
-
-        FILE* file;
-        file = fopen(filename, "r");
-        if (file == NULL) {
-            printf("Failed to open the file.\n");
-            return ERROR_OPEN_FILE;
-        }
-
-        char line[32];
-        while (fgets(line, 32, file) != NULL) {
-            fillBattlefield(battlefield, battleships, line);
-        }
-
-        printBattlefield(battlefield);
-        fclose(file);
+        add_ships_from_file(battleships, battlefield);
     }
 
     int cmd;
