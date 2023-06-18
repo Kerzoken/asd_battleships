@@ -231,6 +231,21 @@ void printBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE]) {
     }
 }
 
+bool isHit(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int col, int row) {
+    return battlefield[row][col] == 'X';
+}
+
+bool parseCoordinates(const char* input, int* col, int* row) {
+    if (strlen(input) < 3) {
+        return false;
+    }
+
+    *col = input[0] - 'A';
+    *row = atoi(input + 2) - 1;
+
+    return *col >= 0 && *row >= 0 && *col < HORIZONTAL_SIZE&&* row < VERTICAL_SIZE;
+}
+
 int main(void) {
     int battleships[] = { 0, 0, 0, 0 };
 
@@ -304,8 +319,50 @@ int main(void) {
             printBattlefield(battlefield);
             break;
         }
-        default: {
-            printf("Invalid command.\n");
+        case 4: {
+            int totalShots = 0;
+            int totalHits = 0;
+
+            while (true) {
+                printBattlefield(battlefield);
+
+                char input[256];
+                printf("\nEnter coordinates to fire: ");
+                fgets(input, sizeof(input), stdin);
+
+                if (strcmp(input, "quit\n") == 0) {
+                    printf("Quitting...\n");
+                    return 0;
+                }
+
+                int col, row;
+                if (!parseCoordinates(input, &col, &row)) {
+                    printf("Invalid coordinates!\n");
+                    continue;
+                }
+
+                if (col < 0 || row < 0 || col >= HORIZONTAL_SIZE || row >= VERTICAL_SIZE) {
+                    printf("Invalid coordinates!\n");
+                    continue;
+                }
+
+                totalShots++;
+
+                if (isHit(battlefield, col, row)) {
+                    printf("Hit!\n");
+                    battlefield[row][col] = 'H';
+                    totalHits++;
+                }
+                else {
+                    printf("Miss!\n");
+                    battlefield[row][col] = 'M';
+                }
+
+                if (totalHits == 15) {
+                    printf("\nYou sunk all the battleships! Game over!\n");
+                    break;
+                }
+            }
         }
         }
     } while (cmd != 4);
