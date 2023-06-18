@@ -23,6 +23,8 @@
 #define HIT_SHIP_SPACE 'H'
 #define HIT_EMPTY_SPACE 'O'
 
+#define REPLAY_FILE "replay.txt"
+
 
 struct encrypted_message
 {

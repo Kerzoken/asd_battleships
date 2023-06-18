@@ -455,11 +455,12 @@ int main(void) {
             printf("\t1) Add ship\n");
             printf("\t2) Edit position\n");
             printf("\t3) Print board\n");
-            printf("\t4) Finish configuration for player 2\n");
+            printf("\t4) Print replay\n");
+            printf("\t5) Finish configuration for player 2\n");
 
             scanf("%d", &cmd);
 
-            if (cmd == 4)
+            if (cmd == 5)
                 if (battleships2[0] == BATTLESHIP_2_COUNT && battleships2[1] == BATTLESHIP_3_COUNT && battleships2[2] == BATTLESHIP_4_COUNT && battleships2[3] == BATTLESHIP_6_COUNT)
                     break;
                 else {
@@ -512,11 +513,21 @@ int main(void) {
                 printBattlefield(battlefield2);
                 break;
             }
+            case 4: {
+				printf("Enter password: ");
+				char password[64];
+				scanf("%s", password);
+                read_replay(password);
+                break;
+            }
             }
         } while (1);
     }
 
     printf("GAME STARTS!\n\n");
+
+    char fields[1000][HORIZONTAL_SIZE][VERTICAL_SIZE];
+    int field_count = 0;
 
     int end = 0;
 
@@ -532,8 +543,9 @@ int main(void) {
                 printf("Menu:\n");
                 printf("\t1) Show board analysis\n");
                 printf("\t2) Shoot\n");
+                printf("\t3) End Game\n");
                 scanf("%d", &a);
-            } while (a != 1 && a != 2);
+            } while (a != 1 && a != 2 && a != 3);
 
             if (a == 1) {
                 printf("\nMy board: \n");
@@ -582,6 +594,13 @@ int main(void) {
                         battlefield2[row][col] = HIT_EMPTY_SPACE;
                 }
 
+                memcpy(fields[field_count], battlefield1, HORIZONTAL_SIZE * VERTICAL_SIZE);
+                field_count++;
+
+                break;
+            }
+            else if (a == 3) {
+                end = 1;
                 break;
             }
 
@@ -656,6 +675,9 @@ int main(void) {
                         if (battlefield1[row][col] == EMPTY_SPACE)
                             battlefield1[row][col] = HIT_SHIP_SPACE;
                     }
+					
+                    memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE* VERTICAL_SIZE);
+					field_count++;
 
                     break;
                 }
@@ -669,6 +691,27 @@ int main(void) {
 
             if (end)
                 break;
+        }
+    }
+	
+    printf("Do you want to save the game in a replay?\n");
+    printf("1. Yes\n");
+    printf("2. No\n");
+    
+    do {
+        scanf("%d", &n);
+    } while (n != 1 && n != 2);
+
+    if (n == 1) {
+        printf("Enter password: ");
+
+        char password[64];
+        scanf("%s", password);
+
+        fclose(fopen(REPLAY_FILE, "w"));
+
+        for (int i = 0; i < field_count; i++) {
+            add_to_replay(fields[i], password);
         }
     }
 

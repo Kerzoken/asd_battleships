@@ -13,7 +13,7 @@
 int add_to_replay(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], char* password)
 {
 	FILE* file;
-	file = fopen("replays.txt", "wa");
+	file = fopen("replay.txt", "a");
 	if (file == NULL) {
 		printf("Failed to open file.\n");
 		return ERROR_OPEN_FILE;
@@ -38,58 +38,38 @@ int add_to_replay(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], char* passwo
 	return 0;
 }
 
-int end_replay() 
-{
-	FILE* file;
-	file = fopen("replays.txt", "a");
-	if (file == NULL) {
-		printf("Failed to open file.\n");
-		return ERROR_OPEN_FILE;
-	}
-	fprintf(file, END_OF_REPLAY);
-	fclose(file);
-	return 0;
-}
-
 int read_replay(char* password)
 {
 	FILE* file;
-	file = fopen("replays.txt", "r");
+	file = fopen("replay.txt", "r");
 
 	if (file == NULL) {
 		printf("Failed to open file.\n");
 		return ERROR_OPEN_FILE;
 	}
 
-	int i = 1;
-	while (feof(file)) {
-		printf("Game %d:\n", i);
-		while (1) {
-			// check for end of replay
-			char tmp[END_OF_REPLAY_SIZE + 1];
-			fgets(tmp, END_OF_REPLAY_SIZE, file);
-			tmp[END_OF_REPLAY_SIZE] = '\0';
+	while (1) {
+		// check for end of replay
+		char tmp[END_OF_REPLAY_SIZE + 1];
+		fgets(tmp, END_OF_REPLAY_SIZE, file);
+		tmp[END_OF_REPLAY_SIZE] = '\0';
 
-			if (!strcmp(tmp, END_OF_REPLAY))
-				break;
+		if (!strcmp(tmp, END_OF_REPLAY))
+			break;
 
-			fseek(file, -END_OF_REPLAY_SIZE, SEEK_CUR);
+		fseek(file, -END_OF_REPLAY_SIZE, SEEK_CUR);
 
-			char line[VERTICAL_SIZE * HORIZONTAL_SIZE];
-			fgets(line, HORIZONTAL_SIZE * VERTICAL_SIZE, file);
+		char line[VERTICAL_SIZE * HORIZONTAL_SIZE];
+		fgets(line, HORIZONTAL_SIZE * VERTICAL_SIZE, file);
 
-			struct encrypted_message msg;
-			msg.text = line;
-			msg.size = HORIZONTAL_SIZE * VERTICAL_SIZE;
+		struct encrypted_message msg;
+		msg.text = line;
+		msg.size = HORIZONTAL_SIZE * VERTICAL_SIZE;
 
-			//char board[HORIZONTAL_SIZE][VERTICAL_SIZE] = decrypt(&msg, password);
-
-			printBattlefield(decrypt(&msg, password));
-			printf("\n\n");
-		}
-		printf("\n");
-		i++;
+		printBattlefield(decrypt(&msg, password));
+		printf("\n\n");
 	}
+
 	fclose(file);
 	return 0;
 }
