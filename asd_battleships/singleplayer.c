@@ -8,16 +8,16 @@ typedef int bool;
 
 #include "battleships.h"
 
+char ERROR_MSG[256];
+
 unsigned int random(unsigned int min, unsigned int max) {
 	return min + rand() % (max - min + 1);
 }
 
 
-void singleplayer()
+void singleplayer(char playerBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships)
 {
-	char playerBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE];
 	char robotBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE];
-	memset(playerBattlefield, 'O', HORIZONTAL_SIZE * VERTICAL_SIZE);
 	memset(robotBattlefield, 'O', HORIZONTAL_SIZE * VERTICAL_SIZE);
 
     // add robot ships
@@ -48,72 +48,73 @@ void singleplayer()
 	}
 	
 
-	switch (a) {
-	case 1:
-		//add ready configuration
-		break;
-
-	case 2:
-		//korabi s duljina 2
-		for (size_t i = 0; i < 4; i++) {
-			printf("Enter a ship of length 2: ");
-			scanf("%s", ship);
-
-			if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
-				i--;
-			}
-		}
-		//korabi s duljina 3
-		for (size_t i = 0; i < 3; i++) {
-			printf("Enter a ship of length 3: ");
-			scanf("%s", ship);
-
-			if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
-				i--;
-			}
-		}
-
-		//korabi s duljina 4
-		for (size_t i = 0; i < 2; i++) {
-			printf("Enter a ship of length 4: ");
-			scanf("%s", ship);
-
-			if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
-				i--;
-			}
-		}
-
-		//korabi s duljina 6
-		do {
-			printf("Enter a ship of length 6: ");
-			scanf("%s", ship);
-		} while (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME);
-
-		break;
-	}
-
-    
-
-    while (!isGameOver(playerBattlefield) && !isGameOver(robotBattlefield)) {
-        // print player battlefield
-        printBattlefield(playerBattlefield);
-
-        // player's turn
-        // get player move 
-        // isValidPlacement
-
-        // update robot battlefield
-        // robot's turn
-        // robot_play(playerBattlefield);
-
-        // update player battlefield
+    if (a == 1) {
+        add_ship_from_file(playerBattlefield, battleships);
     }
-	//test
 
-    if (isGameOver(playerBattlefield)) {
-        printf("You win!\n");
-    }
-    else {
-        printf("You lose!\n");
-    }
+	
+		////korabi s duljina 2
+		//for (size_t i = 0; i < 4; i++) {
+		//	printf("Enter a ship of length 2: ");
+		//	scanf("%s", ship);
+
+		//	if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
+		//		i--;
+		//	}
+		//}
+		////korabi s duljina 3
+		//for (size_t i = 0; i < 3; i++) {
+		//	printf("Enter a ship of length 3: ");
+		//	scanf("%s", ship);
+
+		//	if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
+		//		i--;
+		//	}
+		//}
+
+		////korabi s duljina 4
+		//for (size_t i = 0; i < 2; i++) {
+		//	printf("Enter a ship of length 4: ");
+		//	scanf("%s", ship);
+
+		//	if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
+		//		i--;
+		//	}
+		//}
+
+		////korabi s duljina 6
+		//do {
+		//	printf("Enter a ship of length 6: ");
+		//	scanf("%s", ship);
+		//} while (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME);
+
+    int cmd;
+    do {
+        printf("Menu:\n");
+        printf("\t1) Add ship\n");
+        printf("\t2) Edit position\n");
+        printf("\t3) Print board\n");
+        printf("\t4) Start the battle\n");
+
+        scanf("%d", &cmd);
+
+        switch (cmd) {
+        case 1: {
+            add_ship(playerBattlefield, battleships);
+            break;
+        }
+        case 2: {
+            edit_position(playerBattlefield);
+            break;
+        }
+        case 3: {
+            printBattlefield(playerBattlefield);
+            break;
+        }
+        case 4: {
+			battle(playerBattlefield);
+			break;
+        }
+        }
+    } while (cmd != 4);
 }

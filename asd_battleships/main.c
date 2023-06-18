@@ -146,7 +146,32 @@ int fillBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battl
     return SUCCESS;
 }
 
-void add_ships_from_file(int* battleships, char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE])
+void add_ship(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships)
+{
+    printf("These are the different kinds of ships you can choose from:\n");
+    printf("Four ships of lenght 2\n");
+    printf("Tree ships of lenght 3\n");
+    printf("Two ships of lenght 4\n");
+    printf("One ship of lenght 6\n");
+    printf("These are the directions the ships can be placed in:\n");
+    printf("H - horizontal\n");
+    printf("V - vertical\n");
+    printf("Enter ship in this format: COL-ROW-SIZE-DIRECTION\n");
+
+    char line[32];
+    scanf("%s", line);
+
+    if (isShipAvailable(battleships, line)) {
+        if (fillBattlefield(battlefield, battleships, line) != SUCCESS) {
+            printf("%s\n", ERROR_MSG);
+        }
+    }
+    else {
+        printf("%s\n", ERROR_MSG);
+    }
+}
+
+void add_ships_from_file(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships)
 {
     char filename[128];
 
@@ -246,22 +271,103 @@ bool parseCoordinates(const char* input, int* col, int* row) {
     return *col >= 0 && *row >= 0 && *col < HORIZONTAL_SIZE&&* row < VERTICAL_SIZE;
 }
 
+void edit_position(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships)
+{
+    printf("Enter ship to edit in this format: COL-ROW-SIZE-DIRECTION\n");
+
+    char line[32];
+    scanf("%s", line);
+
+    deleteShip(battlefield, battleships, line);
+
+    printf("Enter new ship in this format: COL-ROW-SIZE-DIRECTION\n");
+
+    scanf("%s", line);
+
+    if (isShipAvailable(battleships, line)) {
+        if (fillBattlefield(battlefield, battleships, line) != SUCCESS) {
+            printf("%s\n", ERROR_MSG);
+        }
+    }
+    else {
+        printf("%s\n", ERROR_MSG);
+    }
+}
+
+void battle(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE])
+{
+    int totalShots = 0;
+    int totalHits = 0;
+
+    while (true) {
+        printBattlefield(battlefield);
+
+        char input[256];
+        printf("\nEnter coordinates to fire: ");
+        fgets(input, sizeof(input), stdin);
+
+        if (strcmp(input, "quit\n") == 0) {
+            printf("Quitting...\n");
+            return 0;
+        }
+
+        int col, row;
+        if (!parseCoordinates(input, &col, &row)) {
+            printf("Invalid coordinates!\n");
+            continue;
+        }
+
+        if (col < 0 || row < 0 || col >= HORIZONTAL_SIZE || row >= VERTICAL_SIZE) {
+            printf("Invalid coordinates!\n");
+            continue;
+        }
+
+        totalShots++;
+
+        if (isHit(battlefield, col, row)) {
+            printf("Hit!\n");
+            battlefield[row][col] = 'H';
+            totalHits++;
+        }
+        else {
+            printf("Miss!\n");
+            battlefield[row][col] = 'M';
+        }
+
+        if (totalHits == 15) {
+            printf("\nYou sunk all the battleships! Game over!\n");
+            break;
+        }
+    }
+}
+
 int main(void) {
     int battleships[] = { 0, 0, 0, 0 };
 
     char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE];
     memset(battlefield, 'O', HORIZONTAL_SIZE * VERTICAL_SIZE);
 
-    int n;
+    int m = 0;
+    do {
+        printf("Choose game mode:\n");
+        printf("1.Singleplayer\n");
+        printf("2.Multiplayer\n");
+    } while (m != 1 && m != 2);
+    
+    if (m == 1) {
+        singleplayer(battleships, battlefield);
+    }
+
+    int n = 0;
     do {
         printf("Load ships:\n");
-        printf("\t1) From file\n");
-        printf("\t2) From console\n");
+        printf("\t1) 1.From file\n");
+        printf("\t2) 2.From console\n");
         scanf("%d", &n);
     } while (n != 1 && n != 2);
 
     if (n == 1) {
-        add_ships_from_file(battleships, battlefield);
+        add_ships_from_file(battlefield, battleships);
     }
 
     int cmd;
@@ -276,43 +382,11 @@ int main(void) {
 
         switch (cmd) {
         case 1: {
-            printf("Enter ship in this format: COL-ROW-SIZE-DIRECTION\n");
-
-            char line[32];
-            scanf("%s", line);
-
-            if (isShipAvailable(battleships, line)) {
-                if (fillBattlefield(battlefield, battleships, line) != SUCCESS) {
-                    printf("%s\n", ERROR_MSG);
-                }
-            }
-            else {
-                printf("%s\n", ERROR_MSG);
-            }
-
+            add_ship(battlefield, battleships);
             break;
         }
         case 2: {
-            printf("Enter ship to edit in this format: COL-ROW-SIZE-DIRECTION\n");
-
-            char line[32];
-            scanf("%s", line);
-
-            deleteShip(battlefield, battleships, line);
-
-            printf("Enter new ship in this format: COL-ROW-SIZE-DIRECTION\n");
-
-            scanf("%s", line);
-
-            if (isShipAvailable(battleships, line)) {
-                if (fillBattlefield(battlefield, battleships, line) != SUCCESS) {
-                    printf("%s\n", ERROR_MSG);
-                }
-            }
-            else {
-                printf("%s\n", ERROR_MSG);
-            }
-
+            edit_position(battlefield, battleships);
             break;
         }
         case 3: {
@@ -320,49 +394,8 @@ int main(void) {
             break;
         }
         case 4: {
-            int totalShots = 0;
-            int totalHits = 0;
-
-            while (true) {
-                printBattlefield(battlefield);
-
-                char input[256];
-                printf("\nEnter coordinates to fire: ");
-                fgets(input, sizeof(input), stdin);
-
-                if (strcmp(input, "quit\n") == 0) {
-                    printf("Quitting...\n");
-                    return 0;
-                }
-
-                int col, row;
-                if (!parseCoordinates(input, &col, &row)) {
-                    printf("Invalid coordinates!\n");
-                    continue;
-                }
-
-                if (col < 0 || row < 0 || col >= HORIZONTAL_SIZE || row >= VERTICAL_SIZE) {
-                    printf("Invalid coordinates!\n");
-                    continue;
-                }
-
-                totalShots++;
-
-                if (isHit(battlefield, col, row)) {
-                    printf("Hit!\n");
-                    battlefield[row][col] = 'H';
-                    totalHits++;
-                }
-                else {
-                    printf("Miss!\n");
-                    battlefield[row][col] = 'M';
-                }
-
-                if (totalHits == 15) {
-                    printf("\nYou sunk all the battleships! Game over!\n");
-                    break;
-                }
-            }
+            battle(battlefield);
+            break;
         }
         }
     } while (cmd != 4);
