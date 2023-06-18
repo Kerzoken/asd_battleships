@@ -590,6 +590,10 @@ int main(void) {
                         }
                     }
 
+                    memcpy(fields[field_count], battlefield1, HORIZONTAL_SIZE* VERTICAL_SIZE);
+                    field_count++;
+
+                    continue;
                 }
                 else {
                     printf("Nothing was hit.");
@@ -671,6 +675,11 @@ int main(void) {
                                 battleships1[3]--;
                             }
                         }
+
+                        memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE* VERTICAL_SIZE);
+                        field_count++;
+
+                        continue;
 
                     }
                     else {
