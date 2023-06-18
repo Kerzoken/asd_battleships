@@ -274,14 +274,12 @@ bool parseCoordinates(const char* input, int* col, int* row) {
 void edit_position(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships)
 {
     printf("Enter ship to edit in this format: COL-ROW-SIZE-DIRECTION\n");
-
     char line[32];
     scanf("%s", line);
 
     deleteShip(battlefield, battleships, line);
 
     printf("Enter new ship in this format: COL-ROW-SIZE-DIRECTION\n");
-
     scanf("%s", line);
 
     if (isShipAvailable(battleships, line)) {
@@ -361,8 +359,8 @@ int main(void) {
     int n = 0;
     do {
         printf("Load ships:\n");
-        printf("\t1) 1.From file\n");
-        printf("\t2) 2.From console\n");
+        printf("\t1) 1.Ready configuration\n");
+        printf("2. Custom configuration\n");
         scanf("%d", &n);
     } while (n != 1 && n != 2);
 

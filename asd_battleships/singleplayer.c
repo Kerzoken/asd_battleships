@@ -14,9 +14,9 @@ unsigned int random(unsigned int min, unsigned int max) {
 	return min + rand() % (max - min + 1);
 }
 
-
 void singleplayer(char playerBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships)
 {
+    // initialize robot battlefield
 	char robotBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE];
 	memset(robotBattlefield, 'O', HORIZONTAL_SIZE * VERTICAL_SIZE);
 
@@ -40,53 +40,16 @@ void singleplayer(char playerBattlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* b
     // add player ships
 	char ship[10];
 	int a = 0;
-	while (a != 1 && a != 2) {
+	 do {
 		printf("Choose one of the following: \n");
 		printf("1. Ready configuration\n");
 		printf("2. Custom configuration\n");
 		scanf("%d", &a);
-	}
-	
+    } while (a != 1 && a != 2);
 
     if (a == 1) {
         add_ship_from_file(playerBattlefield, battleships);
     }
-
-	
-		////korabi s duljina 2
-		//for (size_t i = 0; i < 4; i++) {
-		//	printf("Enter a ship of length 2: ");
-		//	scanf("%s", ship);
-
-		//	if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
-		//		i--;
-		//	}
-		//}
-		////korabi s duljina 3
-		//for (size_t i = 0; i < 3; i++) {
-		//	printf("Enter a ship of length 3: ");
-		//	scanf("%s", ship);
-
-		//	if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
-		//		i--;
-		//	}
-		//}
-
-		////korabi s duljina 4
-		//for (size_t i = 0; i < 2; i++) {
-		//	printf("Enter a ship of length 4: ");
-		//	scanf("%s", ship);
-
-		//	if (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME) {
-		//		i--;
-		//	}
-		//}
-
-		////korabi s duljina 6
-		//do {
-		//	printf("Enter a ship of length 6: ");
-		//	scanf("%s", ship);
-		//} while (fillBattlefield(playerBattlefield, ship) == ERROR_RUNTIME);
 
     int cmd;
     do {
