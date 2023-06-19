@@ -11,14 +11,12 @@ typedef int bool;
 
 char ERROR_MSG[256];
 
-int stoi(char* s) { return s[0] - 'A'; }
-
 int add_to_replay(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], char* password);
 int read_replay(char* password);
 
 bool isValidPlacement(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE],
     int x, int y, int size, char direction) {
-    if (direction == HIT_SHIP_SPACE || direction == DIRECTION_RIGHT) {
+    if (direction == 'H' || direction == DIRECTION_RIGHT) {
         for (int i = x - 1; i < x + size + 1; i++) {
             if (i < 0 || i > 9) continue;
             if ((y - 1 >= 0 && battlefield[y - 1][i] == SHIP_SPACE) ||
@@ -60,11 +58,6 @@ bool isValidPlacement(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE],
     }
     return true;
 }
-
-#define BATTLESHIP_2_COUNT 4
-#define BATTLESHIP_3_COUNT 3
-#define BATTLESHIP_4_COUNT 2
-#define BATTLESHIP_6_COUNT 1
 
 bool isShipAvailable(int* battleships, char* ship) {
     char* temp = _strdup(ship);
@@ -190,7 +183,7 @@ void deleteShip(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleshi
         return;
     }
 
-    if (*direction == HIT_SHIP_SPACE) {
+    if (*direction == 'H') {
         if (col + size > 10) {
             strcpy(ERROR_MSG, "Invalid position.");
             return;
@@ -653,9 +646,6 @@ int main(void) {
                         }
                     }
 
-                    memcpy(fields[field_count], battlefield1, HORIZONTAL_SIZE * VERTICAL_SIZE);
-                    field_count++;
-
                     continue;
                 }
                 else {
@@ -713,8 +703,7 @@ int main(void) {
                             battleships1[3]--;
                         }
                     }
-                    memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
-                    field_count++;
+
                     continue;
                 }
                 else {
@@ -775,11 +764,7 @@ int main(void) {
                             }
                         }
 
-                        memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
-                        field_count++;
-
                         continue;
-
                     }
                     else {
                         printf("Nothing was hit.");

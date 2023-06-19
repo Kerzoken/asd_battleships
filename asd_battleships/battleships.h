@@ -25,6 +25,10 @@
 
 #define REPLAY_FILE "replay.txt"
 
+#define BATTLESHIP_2_COUNT 4
+#define BATTLESHIP_3_COUNT 3
+#define BATTLESHIP_4_COUNT 2
+#define BATTLESHIP_6_COUNT 1
 
 struct encrypted_message
 {

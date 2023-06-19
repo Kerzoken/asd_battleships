@@ -7,7 +7,6 @@
 
 struct encrypted_message* encrypt(char* text, char* key)
 {
-    // MUST input a normal string, TODO: maybe add for strange strings
     static char* cur_vector = INITIAL_VECTOR;
 
     int text_length = strlen(text);
@@ -24,7 +23,7 @@ struct encrypted_message* encrypt(char* text, char* key)
 
     cur_vector = new_text;
 
-    struct encrypted_message* res = malloc(sizeof *res + sizeof(char) * text_length);
+    struct encrypted_message* res = malloc(sizeof *res);
     assert(res != NULL);
     res->text = new_text;
     res->size = text_length;
@@ -56,17 +55,3 @@ char* decrypt(struct encrypted_message* msg, char* key)
     
     return new_text;
 }
-
-//int main()
-//{
-//    struct encrypted_message* c1, * c2, * c3;
-//
-//    c1 = encrypt("Hello", "abc");
-//    c2 = encrypt("World", "abc");
-//    c3 = encrypt("Bye", "abc");
-//
-//    decrypt(c1, "abc");
-//    decrypt(c2, "abc");
-//    decrypt(c3, "abc");
-//    return 0;
-//}

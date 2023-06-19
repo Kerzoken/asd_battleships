@@ -7,9 +7,6 @@
 
 #include "battleships.h"
 
-#define END_OF_REPLAY "----------"
-#define END_OF_REPLAY_SIZE 10
-
 struct encrypted_message* encrypt(char* text, char* key);
 char* decrypt(struct encrypted_message* msg, char* key);
 
