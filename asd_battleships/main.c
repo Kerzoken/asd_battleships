@@ -119,7 +119,7 @@ int fillBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battl
         return ERROR_RUNTIME;
     }
 
-    if (*direction == HIT_SHIP_SPACE) {
+    if (*direction == 'H') {
         if (col + size > HORIZONTAL_SIZE) {
             strcpy(ERROR_MSG, "Invalid position.");
             return ERROR_RUNTIME;
@@ -418,7 +418,7 @@ int main(void) {
         }
         }
 
-    } while (cmd != 4);
+    } while (1);
 
     int battleships2[] = { 0, 0, 0, 0 };
 
@@ -687,45 +687,47 @@ int main(void) {
 
         printf("\nPLAYER 2\n");
 
-        if (gamemode == 1) {
-            // SINGLEPLAYER
-            int x = random(0, 9);
-            int y = random(0, 9);
+        do {
+            if (gamemode == 1) {
+                // SINGLEPLAYER
+                int x = random(0, 9);
+                int y = random(0, 9);
 
-            if (battlefield1[y][x] == SHIP_SPACE) {
-                printf("Battleship hit!\n");
-                other_battlefield2[y][x] = SHIP_SPACE;
-                battlefield1[y][x] = HIT_SHIP_SPACE;
-                int size;
-                if (isShipSunk(battlefield1, x, y, &size)) {
-                    printf("You sunk a battleship!\n");
-                    if (size == 2) {
-                        battleships1[0]--;
+                if (battlefield1[y][x] == SHIP_SPACE) {
+                    printf("Battleship hit!\n");
+                    other_battlefield2[y][x] = SHIP_SPACE;
+                    battlefield1[y][x] = HIT_SHIP_SPACE;
+                    int size;
+                    if (isShipSunk(battlefield1, x, y, &size)) {
+                        printf("You sunk a battleship!\n");
+                        if (size == 2) {
+                            battleships1[0]--;
+                        }
+                        else if (size == 3) {
+                            battleships1[1]--;
+                        }
+                        else if (size == 4) {
+                            battleships1[2]--;
+                        }
+                        else if (size == 6) {
+                            battleships1[3]--;
+                        }
                     }
-                    else if (size == 3) {
-                        battleships1[1]--;
-                    }
-                    else if (size == 4) {
-                        battleships1[2]--;
-                    }
-                    else if (size == 6) {
-                        battleships1[3]--;
-                    }
+                    memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
+                    field_count++;
+                    continue;
                 }
-                memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
-                field_count++;
-                continue;
+                else {
+                    printf("Nothing was hit.");
+                    other_battlefield2[y][x] = HIT_EMPTY_SPACE;
+                    if (battlefield1[y][x] == EMPTY_SPACE)
+                        battlefield1[y][x] = HIT_EMPTY_SPACE;
+                }
+                printf("\n");
+             
+                break;
             }
-            else {
-                printf("Nothing was hit.");
-                other_battlefield2[y][x] = HIT_EMPTY_SPACE;
-                if (battlefield1[y][x] == EMPTY_SPACE)
-                    battlefield1[y][x] = HIT_EMPTY_SPACE;
-            }
-            printf("\n");
-        }
-        else if (gamemode == 2) {
-            do {
+            else if (gamemode == 2) {
                 int a;
                 do {
                     printf("Menu:\n");
@@ -783,7 +785,7 @@ int main(void) {
                         printf("Nothing was hit.");
                         other_battlefield2[row][col] = HIT_EMPTY_SPACE;
                         if (battlefield1[row][col] == EMPTY_SPACE)
-                            battlefield1[row][col] = HIT_SHIP_SPACE;
+                            battlefield1[row][col] = HIT_EMPTY_SPACE;
                     }
 
                     memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
@@ -797,11 +799,10 @@ int main(void) {
                     printf("\nGame Over! Player 2 Wins!\n");
                     break;
                 }
-            } while (1);
-
-            if (end)
-                break;
-        }
+            }
+        } while (1);
+        if (end)
+            break;
     }
 
     printf("Do you want to save the game in a replay?\n");
