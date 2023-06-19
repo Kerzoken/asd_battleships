@@ -130,7 +130,6 @@
     <ClCompile Include="crypt.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="replay.c" />
-    <ClCompile Include="singleplayer.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

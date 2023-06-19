@@ -24,8 +24,5 @@
     <ClCompile Include="crypt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="singleplayer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

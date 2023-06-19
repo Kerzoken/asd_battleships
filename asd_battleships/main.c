@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "battleships.h"
 
+#include <time.h>
+
 typedef int bool;
 
 char ERROR_MSG[256];
@@ -14,7 +16,6 @@ int stoi(char* s) { return s[0] - 'A'; }
 int add_to_replay(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], char* password);
 int read_replay(char* password);
 
-// TODO add macros in 9
 bool isValidPlacement(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE],
     int x, int y, int size, char direction) {
     if (direction == HIT_SHIP_SPACE || direction == DIRECTION_RIGHT) {
@@ -105,13 +106,6 @@ bool isShipAvailable(int* battleships, char* ship) {
     return true;
 }
 
-// TODO: cqlostno formatirane na koda: NULL, !=, {} i tn
-// TODO: add col to be with letters (A, B, C, D, E, F, G, H, I, J)
-
-//#define
-
-
-// TODO add directions
 int fillBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships, char* ship) {
     char* temp = _strdup(ship);
     int col = *strtok(temp, "-") - 'A';
@@ -184,7 +178,6 @@ int fillBattlefield(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battl
 }
 
 
-// TODO add to look for ship in both ways
 void deleteShip(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int* battleships, char* ship) {
     char* temp = _strdup(ship);
     int col = *strtok(temp, "-") - 'A';
@@ -260,7 +253,7 @@ bool parseCoordinates(char* input, int* col, int* row) {
     *col = input[0] - 'A';
     *row = atoi(input + 1) - 1;
 
-    return *col >= 0 && *row >= 0 && *col < HORIZONTAL_SIZE&&* row < VERTICAL_SIZE;
+    return *col >= 0 && *row >= 0 && *col < HORIZONTAL_SIZE && *row < VERTICAL_SIZE;
 }
 
 bool isShipSunk(char battlefield[HORIZONTAL_SIZE][VERTICAL_SIZE], int col, int row, int* ship_size) {
@@ -301,7 +294,13 @@ bool isGameOver(int* battleships) {
     return !battleships[0] && !battleships[1] && !battleships[2] && !battleships[3];
 }
 
+unsigned int random(unsigned int min, unsigned int max) {
+    return min + rand() % (max - min + 1);
+}
+
 int main(void) {
+    srand((unsigned)time(NULL));
+
     int gamemode;
     do {
         printf("Choose gamemode:\n");
@@ -428,6 +427,70 @@ int main(void) {
 
     if (gamemode == 1) {
         // SINGLEPLAYER
+        for (int i = 0; i < BATTLESHIP_6_COUNT; i++) {
+            int x = random(0, 9);
+            int y = random(0, 9);
+            int size = 6;
+            char direction = random(0, 1) == 0 ? 'H' : 'V';
+
+            if (((direction == 'H' && size + x <= HORIZONTAL_SIZE) || (direction == 'V' && size + y <= VERTICAL_SIZE)) && isValidPlacement(battlefield2, x, y, size, direction)) {
+                for (int j = 0; j < size; j++) {
+                    battlefield2[y + (direction == 'V' ? j : 0)][x + (direction == 'H' ? j : 0)] = SHIP_SPACE;
+                }
+            }
+            else
+                i--;
+        }
+
+        for (int i = 0; i < BATTLESHIP_4_COUNT; i++) {
+            int x = random(0, 9);
+            int y = random(0, 9);
+            int size = 4;
+            char direction = random(0, 1) == 0 ? 'H' : 'V';
+
+            if (((direction == 'H' && size + x <= HORIZONTAL_SIZE) || (direction == 'V' && size + y <= VERTICAL_SIZE)) && isValidPlacement(battlefield2, x, y, size, direction)) {
+                for (int j = 0; j < size; j++) {
+                    battlefield2[y + (direction == 'V' ? j : 0)][x + (direction == 'H' ? j : 0)] = SHIP_SPACE;
+                }
+            }
+            else
+                i--;
+        }
+
+        for (int i = 0; i < BATTLESHIP_3_COUNT; i++) {
+            int x = random(0, 9);
+            int y = random(0, 9);
+            int size = 3;
+            char direction = random(0, 1) == 0 ? 'H' : 'V';
+
+            if (((direction == 'H' && size + x <= HORIZONTAL_SIZE) || (direction == 'V' && size + y <= VERTICAL_SIZE)) && isValidPlacement(battlefield2, x, y, size, direction)) {
+                for (int j = 0; j < size; j++) {
+                    battlefield2[y + (direction == 'V' ? j : 0)][x + (direction == 'H' ? j : 0)] = SHIP_SPACE;
+                }
+            }
+            else
+                i--;
+        }
+
+        for (int i = 0; i < BATTLESHIP_2_COUNT; i++) {
+            int x = random(0, 9);
+            int y = random(0, 9);
+            int size = 2;
+            char direction = random(0, 1) == 0 ? 'H' : 'V';
+
+            if (((direction == 'H' && size + x <= HORIZONTAL_SIZE) || (direction == 'V' && size + y <= VERTICAL_SIZE)) && isValidPlacement(battlefield2, x, y, size, direction)) {
+                for (int j = 0; j < size; j++) {
+                    battlefield2[y + (direction == 'V' ? j : 0)][x + (direction == 'H' ? j : 0)] = SHIP_SPACE;
+                }
+            }
+            else
+                i--;
+        }
+
+        battleships2[0] = BATTLESHIP_2_COUNT;
+        battleships2[1] = BATTLESHIP_3_COUNT;
+        battleships2[2] = BATTLESHIP_4_COUNT;
+        battleships2[3] = BATTLESHIP_6_COUNT;
     }
     else {
 
@@ -590,7 +653,7 @@ int main(void) {
                         }
                     }
 
-                    memcpy(fields[field_count], battlefield1, HORIZONTAL_SIZE* VERTICAL_SIZE);
+                    memcpy(fields[field_count], battlefield1, HORIZONTAL_SIZE * VERTICAL_SIZE);
                     field_count++;
 
                     continue;
@@ -626,6 +689,40 @@ int main(void) {
 
         if (gamemode == 1) {
             // SINGLEPLAYER
+            int x = random(0, 9);
+            int y = random(0, 9);
+
+            if (battlefield1[y][x] == SHIP_SPACE) {
+                printf("Battleship hit!\n");
+                other_battlefield2[y][x] = SHIP_SPACE;
+                battlefield1[y][x] = HIT_SHIP_SPACE;
+                int size;
+                if (isShipSunk(battlefield1, x, y, &size)) {
+                    printf("You sunk a battleship!\n");
+                    if (size == 2) {
+                        battleships1[0]--;
+                    }
+                    else if (size == 3) {
+                        battleships1[1]--;
+                    }
+                    else if (size == 4) {
+                        battleships1[2]--;
+                    }
+                    else if (size == 6) {
+                        battleships1[3]--;
+                    }
+                }
+                memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
+                field_count++;
+                continue;
+            }
+            else {
+                printf("Nothing was hit.");
+                other_battlefield2[y][x] = HIT_EMPTY_SPACE;
+                if (battlefield1[y][x] == EMPTY_SPACE)
+                    battlefield1[y][x] = HIT_EMPTY_SPACE;
+            }
+            printf("\n");
         }
         else if (gamemode == 2) {
             do {
@@ -676,7 +773,7 @@ int main(void) {
                             }
                         }
 
-                        memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE* VERTICAL_SIZE);
+                        memcpy(fields[field_count], battlefield2, HORIZONTAL_SIZE * VERTICAL_SIZE);
                         field_count++;
 
                         continue;
